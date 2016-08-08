@@ -9,7 +9,6 @@ import (
 	"runtime"
 	"sync"
 	"time"
-
 	"strconv"
 
 	"github.com/mattn/go-colorable"
