@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 	"strconv"
-
+	"encoding/json"
 	"github.com/mattn/go-colorable"
 //	"github.com/mattn/go-isatty"
 	"github.com/valyala/fasttemplate"
@@ -43,6 +43,8 @@ type (
 		mu    *sync.RWMutex
 		_suffix int
 	}
+
+	JSON map[string]interface{}
 )
 
 const (
@@ -195,12 +197,21 @@ func (l *Logger) Printf(format string, args ...interface{}) {
 	fmt.Fprintf(l.output, f, args...)
 }
 
+
+func (l *Logger) Printj(j JSON) {
+	json.NewEncoder(l.output).Encode(j)
+}
+
 func (l *Logger) Debug(i ...interface{}) {
 	l.log(DEBUG, "", i...)
 }
 
 func (l *Logger) Debugf(format string, args ...interface{}) {
 	l.log(DEBUG, format, args...)
+}
+
+func (l *Logger) Debugj(j JSON) {
+	l.log(DEBUG, "json", j)
 }
 
 func (l *Logger) Info(i ...interface{}) {
@@ -211,12 +222,23 @@ func (l *Logger) Infof(format string, args ...interface{}) {
 	l.log(INFO, format, args...)
 }
 
+func (l *Logger) Infoj(j JSON) {
+	l.log(INFO, "json", j)
+}
+
+
+
 func (l *Logger) Warn(i ...interface{}) {
 	l.log(WARN, "", i...)
 }
 
 func (l *Logger) Warnf(format string, args ...interface{}) {
 	l.log(WARN, format, args...)
+}
+
+
+func (l *Logger) Warnj(j JSON) {
+	l.log(WARN, "json", j)
 }
 
 func (l *Logger) Error(i ...interface{}) {
@@ -227,6 +249,10 @@ func (l *Logger) Errorf(format string, args ...interface{}) {
 	l.log(ERROR, format, args...)
 }
 
+func (l *Logger) Errorj(j JSON) {
+	l.log(ERROR, "json", j)
+}
+
 func (l *Logger) Fatal(i ...interface{}) {
 	l.log(FATAL, "", i...)
 	os.Exit(1)
@@ -235,6 +261,10 @@ func (l *Logger) Fatal(i ...interface{}) {
 func (l *Logger) Fatalf(format string, args ...interface{}) {
 	l.log(FATAL, format, args...)
 	os.Exit(1)
+}
+
+func (l *Logger) Fatalj(j JSON) {
+	l.log(FATAL, "json", j)
 }
 
 func ConsoleOutput(b bool) {
@@ -285,12 +315,20 @@ func Printf(format string, args ...interface{}) {
 	global.Printf(format, args...)
 }
 
+func Printj(j JSON) {
+	global.Printj(j)
+}
+
 func Debug(i ...interface{}) {
 	global.Debug(i...)
 }
 
 func Debugf(format string, args ...interface{}) {
 	global.Debugf(format, args...)
+}
+
+func Debugj(j JSON) {
+	global.Debugj(j)
 }
 
 func Info(i ...interface{}) {
@@ -301,12 +339,20 @@ func Infof(format string, args ...interface{}) {
 	global.Infof(format, args...)
 }
 
+func Infoj(j JSON) {
+	global.Infoj(j)
+}
+
 func Warn(i ...interface{}) {
 	global.Warn(i...)
 }
 
 func Warnf(format string, args ...interface{}) {
 	global.Warnf(format, args...)
+}
+
+func Warnj(j JSON) {
+	global.Warnj(j)
 }
 
 func Error(i ...interface{}) {
@@ -317,12 +363,20 @@ func Errorf(format string, args ...interface{}) {
 	global.Errorf(format, args...)
 }
 
+func Errorj(j JSON) {
+	global.Errorj(j)
+}
+
 func Fatal(i ...interface{}) {
 	global.Fatal(i...)
 }
 
 func Fatalf(format string, args ...interface{}) {
 	global.Fatalf(format, args...)
+}
+
+func Fatalj(j JSON) {
+	global.Fatalj(j)
 }
 
 func (l *Logger) log(v LEVEL, format string, args ...interface{}) {
